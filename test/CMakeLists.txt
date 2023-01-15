@@ -16,5 +16,4 @@ target_link_libraries(test_simple_fftw
     GTest::GTest
     ${PROJECT_NAME})
 
-
 add_test(testSimpleFFTW test_simple_fftw)

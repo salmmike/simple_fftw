@@ -8,6 +8,12 @@ The Simple FFTW library is built using CMake. It requires the fftw development l
 The library is tested using ctest and Google tests.
 Run ctest after building to run unit tests.
 
+## Installing
+`cmake  -DINSTALL_GTEST=OFF && sudo make install`
+
+After this you should be able to run
+`g++ --std=c++20 main.cpp -I/usr/local/include/simple_fftw -lfftw3`
+
 ## Usage
 The SimpleFFTW is a template class that supports using either real data as doubles or complex data as std::complex<double>.
 
