@@ -56,11 +56,11 @@ public:
     /*
     Get pointer to internal output data.
     */
-    B* rawOutput() const noexcept { return out.get(); };
+    inline B* rawOutput() const noexcept { return out.get(); };
     /*
     Get pointer to internal input data.
     */
-    A* rawInput() const noexcept { return in.get(); };
+    inline A* rawInput() const noexcept { return in.get(); };
 
     /*
     Insert data to be used as input for next FFT.
