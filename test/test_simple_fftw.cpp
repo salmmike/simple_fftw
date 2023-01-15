@@ -46,8 +46,22 @@ TEST(NAME, complexShort)
         ASSERT_TRUE(compF(data[i], testResReal[i]))
         << data[i] << " != " << testResReal[i];
     }
+
+    auto comp = a.fft(input);
+
+    for (size_t i = 0; i < input.size(); ++i) {
+        ASSERT_TRUE(compF(comp[i].real(), testResReal[i]))
+        << comp[i].real() << " != " << testResReal[i];
+    }
     //writeToFile("short_data_fftw_complex.csv", a.real());
 
+}
+
+TEST(NAME, testSize)
+{
+    size_t N = 2048;
+    sfftw::SimpleFFTW<double> a(N);
+    ASSERT_TRUE(a.size() == N);
 }
 
 TEST(NAME, realShort)
