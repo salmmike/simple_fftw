@@ -90,15 +90,21 @@ public:
     void execute();
 
     /*
-    Get size of FFT data buffer.
+    Get size of FFT input buffer.
     */
     size_t size() const noexcept { return size; };
+
+    /*
+    Get size of FFT output buffer
+    */
+    size_t outputSize() const noexcept { return _outputSize; };
 
 
 private:
     void init();
 
     const size_t _size;
+    size_t _outputSize;
     std::unique_ptr<A[]> in;
     std::unique_ptr<std::complex<double>[]> out;
     fftw_plan plan {nullptr};
@@ -112,6 +118,7 @@ void SimpleFFTW<A>::init()
     out = std::make_unique<std::complex<double>[]>(_size);
 
     if (std::is_floating_point<A>::value) {
+        _outputSize = _size/2 - 1;
         plan = fftw_plan_dft_r2c_1d(
             _size,
             reinterpret_cast<double*>(in.get()),
@@ -119,6 +126,7 @@ void SimpleFFTW<A>::init()
             FFTW_ESTIMATE
         );
     } else {
+        _outputSize = _size;
         plan = fftw_plan_dft_1d(
             _size,
             reinterpret_cast<fftw_complex*>(in.get()),
@@ -132,7 +140,7 @@ template <FFTWType A>
 std::vector<std::complex<double>> SimpleFFTW<A>::getOutput() const
 {
     std::vector<std::complex<double>> output(_size);
-    output.assign(out.get(), out.get() + _size);
+    output.assign(out.get(), out.get() + _outputSize);
     return output;
 }
 
@@ -184,7 +192,7 @@ std::vector<double> SimpleFFTW<A>::real() const
 {
     std::vector<double> data(_size);
 
-    std::transform(out.get(), out.get() + _size, std::begin(data),
+    std::transform(out.get(), out.get() + _outputSize, std::begin(data),
         [](std::complex<double> d) {
             return d.real();
         }
