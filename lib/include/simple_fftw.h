@@ -22,7 +22,6 @@
 #include <simple_fftw_base.h>
 
 #include <type_traits>
-#include <stdexcept>
 
 namespace sfftw {
 

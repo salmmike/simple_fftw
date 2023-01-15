@@ -1,5 +1,6 @@
 
 #include <simple_fftw.h>
+#include <simple_ifftw.h>
 
 #include <gtest/gtest.h>
 #include <iostream>
@@ -52,6 +53,23 @@ TEST(NAME, complexShort)
     for (size_t i = 0; i < input.size(); ++i) {
         ASSERT_TRUE(compF(comp[i].real(), testResReal[i]))
         << comp[i].real() << " != " << testResReal[i];
+    }
+
+    sfftw::SimpleIFFTW<double> ifft(input.size());
+    auto inverse = ifft.ifft(comp);
+
+    for (size_t i = 0; i < input.size()/2 - 1; ++i) {
+        ASSERT_TRUE(compF(inverse[i]/input.size(), input[i].real()))
+        << "i: " << i << " " << inverse[i]/input.size()
+        << " != " << input[i].real();
+    }
+
+    inverse = ifft.ifft(comp, true);
+
+    for (size_t i = 0; i < input.size()/2 - 1; ++i) {
+        ASSERT_TRUE(compF(inverse[i], input[i].real()))
+        << "i: " << i << " " << inverse[i]
+        << " != " << input[i].real();
     }
     //writeToFile("short_data_fftw_complex.csv", a.real());
 
